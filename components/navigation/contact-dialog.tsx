@@ -3,6 +3,7 @@
 import { useState, type FormEvent, type ReactNode } from "react"
 import {
   Building2,
+  CheckCircle2,
   Mail,
   MessageCircle,
   Phone,
@@ -130,14 +131,18 @@ export function ContactDialog({ children }: { children: ReactNode }) {
                 {submitted ? (
                   <div
                     role="status"
-                    className="rounded-2xl border border-border bg-muted/50 px-5 py-8 text-center"
+                    className="rounded-2xl border border-emerald-600/20 bg-emerald-600/5 px-5 py-8 text-center"
                   >
+                    <CheckCircle2
+                      aria-hidden="true"
+                      className="mx-auto mb-3 size-10 text-emerald-600"
+                    />
                     <p className="font-semibold text-foreground">
-                      Merci pour votre demande.
+                      Formulaire validé avec succès !
                     </p>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Votre message est prêt. Un expert vous recontactera sous
-                      48h.
+                    <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
+                      Tous les champs sont valides. Le formulaire n’est pas
+                      encore connecté à un service d’envoi.
                     </p>
                     <Button
                       type="button"
