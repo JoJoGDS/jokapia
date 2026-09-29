@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button"
 import { ContactDialog } from "@/components/navigation/contact-dialog"
 import { Link } from "react-aria-components"
 
-const navItems = ["Product", "Solutions", "Pricing", "Resources"]
+const navItems = [
+  { label: "Accueil", href: "/" },
+  { label: "Boutique", href: "/store" },
+  { label: "Nos services", href: "/#services" },
+]
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -27,11 +31,11 @@ export function Navbar() {
           <div className="flex items-center justify-center gap-6 text-sm font-medium text-muted-foreground lg:gap-8">
             {navItems.map((item) => (
               <Link
-                key={item}
-                href="#"
+                key={item.href}
+                href={item.href}
                 className="transition-colors duration-200 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </div>
@@ -79,12 +83,12 @@ export function Navbar() {
             <div className="mt-3 flex flex-col gap-1 border-t border-border/80 pt-3">
               {navItems.map((item) => (
                 <Link
-                  key={item}
-                  href="#"
+                  key={item.href}
+                  href={item.href}
                   onPress={() => setIsMenuOpen(false)}
                   className="flex min-h-12 items-center justify-between rounded-xl px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-inset"
                 >
-                  {item}
+                  {item.label}
                   <ArrowUpRight
                     aria-hidden="true"
                     className="size-4 text-muted-foreground"

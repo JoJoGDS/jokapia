@@ -1,11 +1,14 @@
 "use client"
 
-import { ArrowRight, ArrowUpRight } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useTheme } from "next-themes"
+import { ArrowRight, ArrowUpRight, Moon, Sun } from "lucide-react"
 import { Link } from "react-aria-components"
 import { ContactDialog } from "@/components/navigation/contact-dialog"
 import { Button } from "@/components/ui/button"
 
 const exploreLinks = [
+  { label: "Boutique produits", href: "/store" },
   { label: "Nos expertises", href: "#services" },
   { label: "Notre méthode", href: "#methodologie" },
 ] as const
@@ -21,6 +24,16 @@ const footerLinkClassName =
   "inline-flex w-fit items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
 
 export function SiteFooter() {
+  const { resolvedTheme, setTheme } = useTheme()
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  const isDark = isMounted && resolvedTheme === "dark"
+  const themeAction = isDark ? "Passer au thème clair" : "Passer au thème sombre"
+
   return (
     <footer className="border-t border-border/80 bg-muted/20">
       <div className="mx-auto max-w-7xl px-4 pb-6 pt-10 sm:px-6 sm:pt-14 lg:pt-16">
@@ -88,6 +101,16 @@ export function SiteFooter() {
             <h3 className="mb-1 text-xs font-semibold tracking-[0.16em] text-foreground uppercase">
               Contact
             </h3>
+            <p className="text-sm font-medium text-foreground">Johnstoni Okapia sarl</p>
+            <address className="max-w-[15rem] text-sm leading-6 text-muted-foreground not-italic">
+              112, Avenue Maniema Q. Kyeshero
+            </address>
+            <a href="tel:+243902022222" className={footerLinkClassName}>
+              +243902022222
+            </a>
+            <a href="mailto:contact@jokapia.com" className={footerLinkClassName}>
+              contact@jokapia.com
+            </a>
             <p className="max-w-[15rem] text-sm leading-6 text-muted-foreground">
               Une question ou un besoin précis ? Notre équipe est à votre écoute.
             </p>
@@ -104,13 +127,30 @@ export function SiteFooter() {
         </div>
 
         <div className="flex flex-col gap-3 pt-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Jokapia. Tous droits réservés.</p>
-          <Link
-            href="#top"
-            className="inline-flex w-fit items-center gap-2 rounded-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-          >
-            Retour en haut <ArrowUpRight aria-hidden="true" className="size-3.5" />
-          </Link>
+          <p>© {new Date().getFullYear()} Johnstoni Okapia sarl. Tous droits réservés.</p>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+            <Button
+              type="button"
+              variant="ghost"
+              isDisabled={!isMounted}
+              aria-label={themeAction}
+              onPress={() => setTheme(isDark ? "light" : "dark")}
+              className="min-h-10 rounded-full px-3 text-xs text-muted-foreground hover:text-foreground"
+            >
+              {isDark ? (
+                <Sun aria-hidden="true" className="size-4" />
+              ) : (
+                <Moon aria-hidden="true" className="size-4" />
+              )}
+              {themeAction}
+            </Button>
+            <Link
+              href="#top"
+              className="inline-flex min-h-10 w-fit items-center gap-2 rounded-sm text-xs transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              Retour en haut <ArrowUpRight aria-hidden="true" className="size-3.5" />
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
