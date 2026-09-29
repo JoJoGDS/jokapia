@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ArrowUpRight, Menu, X } from "lucide-react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ContactDialog } from "@/components/navigation/contact-dialog"
 import { Link } from "react-aria-components"
@@ -23,9 +24,16 @@ export function Navbar() {
         className={`mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-2 border border-border/80 bg-card/90 px-3 py-2.5 shadow-sm backdrop-blur-sm sm:px-4 sm:py-3 md:flex-nowrap md:rounded-full ${isMenuOpen ? "rounded-3xl" : "rounded-full"}`}
       >
         <div className="flex items-center justify-start md:w-28">
-          <div className="flex size-9 items-center justify-center rounded-full border border-border bg-secondary text-sm font-semibold text-foreground shadow-sm sm:size-10">
-            J
-          </div>
+          <Link
+            href="/"
+            aria-label="Jokapia, accueil"
+            className="rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
+          >
+            <span className="inline-flex items-center gap-0">
+              <Image src="/logo-mark.svg" alt="" width={49} height={40} priority />
+              <Image src="/logo-wordmark.svg" alt="" width={62} height={22} priority />
+            </span>
+          </Link>
         </div>
 
         <div className="hidden flex-1 items-center justify-center md:flex">

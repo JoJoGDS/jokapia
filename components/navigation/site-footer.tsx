@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useTheme } from "next-themes"
+import Image from "next/image"
 import { ArrowRight, ArrowUpRight, Moon, Sun } from "lucide-react"
 import { Link } from "react-aria-components"
 import { ContactDialog } from "@/components/navigation/contact-dialog"
@@ -65,10 +66,10 @@ export function SiteFooter() {
               aria-label="Jokapia, retour à l’accueil"
               className="inline-flex items-center gap-3 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
-              <span className="flex size-10 items-center justify-center rounded-full border border-border bg-secondary text-sm font-semibold text-foreground shadow-sm">
-                J
+              <span className="inline-flex items-center gap-0">
+                <Image src="/logo-mark.svg" alt="" width={54} height={44} />
+                <Image src="/logo-wordmark.svg" alt="" width={68} height={24} />
               </span>
-              <span className="font-semibold tracking-tight text-foreground">Jokapia</span>
             </Link>
             <p className="mt-4 text-sm leading-6 text-muted-foreground">
               Des solutions modernes pour concevoir, connecter et équiper votre activité.
