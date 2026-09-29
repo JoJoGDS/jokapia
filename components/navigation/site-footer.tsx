@@ -8,9 +8,10 @@ import { ContactDialog } from "@/components/navigation/contact-dialog"
 import { Button } from "@/components/ui/button"
 
 const exploreLinks = [
+  { label: "À propos", href: "/about" },
   { label: "Boutique produits", href: "/store" },
-  { label: "Nos expertises", href: "#services" },
-  { label: "Notre méthode", href: "#methodologie" },
+  { label: "Nos expertises", href: "/#services" },
+  { label: "Notre méthode", href: "/#methodologie" },
 ] as const
 
 const serviceLinks = [
@@ -91,7 +92,7 @@ export function SiteFooter() {
               Nos services
             </h3>
             {serviceLinks.map((label) => (
-              <Link key={label} href="#services" className={footerLinkClassName}>
+              <Link key={label} href="/#services" className={footerLinkClassName}>
                 {label}
               </Link>
             ))}

@@ -8,6 +8,7 @@ import { Link } from "react-aria-components"
 
 const navItems = [
   { label: "Accueil", href: "/" },
+  { label: "À propos", href: "/about" },
   { label: "Boutique", href: "/store" },
   { label: "Nos services", href: "/#services" },
 ]
