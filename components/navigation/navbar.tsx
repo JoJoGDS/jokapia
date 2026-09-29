@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Menu, X } from "lucide-react"
+import { ArrowUpRight, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ContactDialog } from "@/components/navigation/contact-dialog"
 import { Link } from "react-aria-components"
@@ -11,15 +11,11 @@ const navItems = ["Product", "Solutions", "Pricing", "Resources"]
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const handleToggleMenu = () => {
-    setIsMenuOpen((open) => !open)
-  }
-
   return (
     <header className="px-3 py-4 md:px-6 md:py-6">
       <nav
         aria-label="Navigation principale"
-        className={`mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-2 border border-border/80 bg-card/80 px-3 py-2.5 shadow-sm backdrop-blur-sm sm:px-4 sm:py-3 md:flex-nowrap md:rounded-full ${isMenuOpen ? "rounded-3xl" : "rounded-full"}`}
+        className={`mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-2 border border-border/80 bg-card/90 px-3 py-2.5 shadow-sm backdrop-blur-sm sm:px-4 sm:py-3 md:flex-nowrap md:rounded-full ${isMenuOpen ? "rounded-3xl" : "rounded-full"}`}
       >
         <div className="flex items-center justify-start md:w-28">
           <div className="flex size-9 items-center justify-center rounded-full border border-border bg-secondary text-sm font-semibold text-foreground shadow-sm sm:size-10">
@@ -54,11 +50,11 @@ export function Navbar() {
             variant="ghost"
             size="icon"
             type="button"
-            className="size-10 shrink-0 md:hidden"
+            className="size-10 shrink-0 rounded-full md:hidden"
             aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
-            onPress={handleToggleMenu}
+            onPress={() => setIsMenuOpen((open) => !open)}
           >
             {isMenuOpen ? (
               <X aria-hidden="true" />
@@ -70,25 +66,32 @@ export function Navbar() {
 
         <div
           id="mobile-navigation"
+          aria-label="Liens de navigation"
           aria-hidden={!isMenuOpen}
           inert={!isMenuOpen}
-          className={`basis-full overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out motion-reduce:transition-none md:hidden ${
+          className={`grid basis-full overflow-hidden transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none md:hidden ${
             isMenuOpen
-              ? "pointer-events-auto max-h-80 opacity-100"
-              : "pointer-events-none max-h-0 opacity-0"
+              ? "pointer-events-auto grid-rows-[1fr] opacity-100"
+              : "pointer-events-none grid-rows-[0fr] opacity-0"
           }`}
         >
-          <div className="mt-2 flex flex-col gap-1 border-t border-border/80 pt-2">
-            {navItems.map((item) => (
-              <Link
-                key={item}
-                href="#"
-                onPress={() => setIsMenuOpen(false)}
-                className="rounded-xl px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-inset"
-              >
-                {item}
-              </Link>
-            ))}
+          <div className="min-h-0 overflow-hidden">
+            <div className="mt-3 flex flex-col gap-1 border-t border-border/80 pt-3">
+              {navItems.map((item) => (
+                <Link
+                  key={item}
+                  href="#"
+                  onPress={() => setIsMenuOpen(false)}
+                  className="flex min-h-12 items-center justify-between rounded-xl px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-inset"
+                >
+                  {item}
+                  <ArrowUpRight
+                    aria-hidden="true"
+                    className="size-4 text-muted-foreground"
+                  />
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </nav>
