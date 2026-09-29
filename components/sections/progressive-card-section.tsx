@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
 import {
   ArrowRight,
   Code2,
@@ -43,6 +42,7 @@ type ProgressiveCardSectionProps = {
   heading: string
   introduction: string
   cards: ProgressiveCard[]
+  variant: "expertise" | "methodology"
 }
 
 export function ProgressiveCardSection({
@@ -52,184 +52,112 @@ export function ProgressiveCardSection({
   heading,
   introduction,
   cards,
+  variant,
 }: ProgressiveCardSectionProps) {
-  const sectionRef = useRef<HTMLElement>(null)
-  const [activeIndex, setActiveIndex] = useState(0)
-
-  useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
-
-    const desktopQuery = window.matchMedia("(min-width: 1024px)")
-    let observer: IntersectionObserver | undefined
-
-    const syncScrollStage = () => {
-      observer?.disconnect()
-      observer = undefined
-
-      if (!desktopQuery.matches) {
-        setActiveIndex(0)
-        return
-      }
-
-      const steps = section.querySelectorAll<HTMLElement>("[data-progressive-step]")
-      observer = new IntersectionObserver(
-        (entries) => {
-          const visibleSteps = entries.filter((entry) => entry.isIntersecting)
-          if (visibleSteps.length === 0) return
-
-          const center = window.innerHeight / 2
-          const nearestStep = visibleSteps.reduce((nearest, entry) => {
-            const distance = Math.abs(
-              entry.boundingClientRect.top + entry.boundingClientRect.height / 2 - center
-            )
-            const nearestDistance = Math.abs(
-              nearest.boundingClientRect.top + nearest.boundingClientRect.height / 2 - center
-            )
-            return distance < nearestDistance ? entry : nearest
-          })
-
-          setActiveIndex(Number((nearestStep.target as HTMLElement).dataset.progressiveStep))
-        },
-        { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
-      )
-
-      steps.forEach((step) => observer?.observe(step))
-    }
-
-    syncScrollStage()
-    desktopQuery.addEventListener("change", syncScrollStage)
-    return () => {
-      desktopQuery.removeEventListener("change", syncScrollStage)
-      observer?.disconnect()
-    }
-  }, [])
-
-  const activeCard = cards[activeIndex]
+  const isMethodology = variant === "methodology"
 
   return (
     <section
-      ref={sectionRef}
       id={id}
       aria-labelledby={headingId}
-      className="relative mx-auto max-w-7xl px-4 py-14 sm:py-20 md:px-6 lg:py-24"
+      className={`relative isolate overflow-hidden ${
+        isMethodology
+          ? "bg-muted/35"
+          : "border-y border-border/70 bg-muted/20"
+      }`}
     >
-      <div className="grid gap-8 lg:grid-cols-[minmax(15rem,0.7fr)_minmax(0,1.3fr)] lg:gap-12">
-        <div className="lg:sticky lg:top-24 lg:h-fit">
-          <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+      {isMethodology && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-44 right-[-8rem] -z-10 size-[28rem] rounded-full bg-primary/[0.035] blur-3xl"
+        />
+      )}
+
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/80 px-3 py-1.5 text-[0.65rem] font-semibold tracking-[0.17em] text-muted-foreground uppercase shadow-sm">
+            <span aria-hidden="true" className="size-1.5 rounded-full bg-primary/70" />
             {eyebrow}
           </p>
           <h2
             id={headingId}
-            className="mt-4 max-w-md font-heading text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-4xl lg:text-5xl"
+            className="mt-5 font-heading text-3xl font-semibold tracking-[-0.055em] text-foreground sm:text-4xl lg:text-[2.75rem]"
           >
             {heading}
           </h2>
-          <p className="mt-4 max-w-md text-sm leading-7 text-muted-foreground sm:text-base">
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-muted-foreground sm:text-base sm:leading-8">
             {introduction}
           </p>
-
-          <div className="mt-8 hidden items-center gap-3 lg:flex" aria-hidden="true">
-            <span className="font-heading text-xs font-medium tabular-nums text-foreground">
-              {String(activeIndex + 1).padStart(2, "0")}
-            </span>
-            <span className="flex gap-2">
-              {cards.map((card, index) => (
-                <span
-                  key={card.title}
-                  className={`h-1.5 rounded-full transition-all duration-500 ${
-                    index === activeIndex ? "w-10 bg-primary" : "w-6 bg-border"
-                  }`}
-                />
-              ))}
-            </span>
-            <span className="font-heading text-xs font-medium tabular-nums text-muted-foreground">
-              {String(cards.length).padStart(2, "0")}
-            </span>
-          </div>
         </div>
 
-        <div className="min-w-0">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
-            {cards.map((card) => (
-              <ProgressiveCard key={card.title} card={card} />
-            ))}
-          </div>
+        <div
+          className={`relative mx-auto mt-10 grid max-w-6xl gap-4 sm:mt-12 sm:grid-cols-2 lg:mt-14 ${
+            isMethodology ? "lg:grid-cols-4 lg:gap-5" : "lg:grid-cols-4 lg:gap-4"
+          }`}
+        >
+          {isMethodology && (
+            <div
+              aria-hidden="true"
+              className="absolute left-[12%] right-[12%] top-7 hidden h-px bg-gradient-to-r from-transparent via-border to-transparent lg:block"
+            />
+          )}
 
-          <div className="hidden lg:block">
-            <div className="sticky top-[18vh] z-10 flex min-h-[min(60svh,36rem)] items-center py-4">
-              <ProgressiveCard key={activeCard.title} card={activeCard} animated />
-            </div>
+          {cards.map((card, index) => {
+            const Icon = icons[card.icon]
 
-            <div aria-hidden="true">
-              {cards.map((card, index) => (
-                <div
-                  key={card.title}
-                  data-progressive-step={index}
-                  className="h-[75svh]"
-                />
-              ))}
-            </div>
-          </div>
+            return (
+              <article
+                key={card.title}
+                className={`group relative flex min-h-[17rem] flex-col rounded-[1.35rem] border border-border/80 bg-card p-5 shadow-[0_8px_28px_rgba(15,23,42,0.035)] transition-[transform,border-color,box-shadow] duration-500 ease-out hover:-translate-y-1 hover:border-primary/25 hover:shadow-[0_20px_46px_rgba(15,23,42,0.09)] motion-reduce:transform-none motion-reduce:transition-none sm:p-6 ${
+                  isMethodology ? "lg:min-h-[19rem] lg:p-6" : "lg:min-h-[18rem]"
+                }`}
+              >
+                <div className="relative z-10 flex items-center justify-between gap-4">
+                  {isMethodology ? (
+                    <span className="flex size-10 items-center justify-center rounded-full border border-border bg-background font-heading text-xs font-medium tabular-nums text-muted-foreground shadow-sm">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  ) : (
+                    <span className="max-w-[12rem] text-[0.6rem] leading-5 font-semibold tracking-[0.14em] text-muted-foreground uppercase">
+                      {card.label}
+                    </span>
+                  )}
+
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-border/80 bg-secondary/70 text-foreground transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground motion-reduce:transition-none sm:size-12">
+                    <Icon aria-hidden="true" className="size-5" strokeWidth={1.7} />
+                  </span>
+                </div>
+
+                {isMethodology && (
+                  <p className="mt-6 text-[0.6rem] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
+                    {card.label}
+                  </p>
+                )}
+
+                <h3 className="mt-5 font-heading text-lg font-semibold tracking-[-0.045em] text-foreground sm:text-xl">
+                  {card.title}
+                </h3>
+                <p className="mt-2.5 text-sm leading-6 text-muted-foreground">
+                  {card.description}
+                </p>
+
+                {card.action && (
+                  <Link
+                    href={card.action.href}
+                    className="mt-auto inline-flex w-fit items-center gap-2 pt-5 text-sm font-semibold text-foreground transition-colors hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+                  >
+                    {card.action.label}
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="size-4 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none"
+                    />
+                  </Link>
+                )}
+              </article>
+            )
+          })}
         </div>
       </div>
     </section>
-  )
-}
-
-function ProgressiveCard({
-  card,
-  animated = false,
-}: {
-  card: ProgressiveCard
-  animated?: boolean
-}) {
-  const Icon = icons[card.icon]
-
-  return (
-    <article
-      className={
-        animated
-          ? "progressive-card-enter relative isolate flex min-h-[22rem] w-full flex-col overflow-hidden rounded-[1.75rem] border border-border/80 bg-gradient-to-br from-card via-card to-primary/[0.04] p-5 shadow-[0_22px_60px_rgba(15,23,42,0.12)] sm:min-h-[24rem] sm:p-8"
-          : "group flex h-full min-h-72 flex-col overflow-hidden rounded-[1.5rem] border border-border bg-card/80 p-5 shadow-[0_10px_30px_rgba(15,23,42,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:bg-card sm:p-6"
-      }
-    >
-      <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-
-      <div className="flex items-start justify-between gap-4">
-        <span className="max-w-[16rem] text-[0.65rem] leading-5 font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-          {card.label}
-        </span>
-
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-border bg-secondary text-foreground shadow-inner shadow-white/40 sm:size-14">
-          <Icon aria-hidden="true" className="size-5 sm:size-6" strokeWidth={1.7} />
-        </span>
-      </div>
-
-      <h3
-        className={`font-heading text-xl font-semibold tracking-[-0.04em] text-foreground ${
-          animated ? "mt-8 sm:mt-10 sm:text-3xl" : "mt-7"
-        }`}
-      >
-        {card.title}
-      </h3>
-      <p
-        className={`text-sm leading-6 text-muted-foreground ${
-          animated ? "mt-4 max-w-xl sm:text-base sm:leading-8" : "mt-3"
-        }`}
-      >
-        {card.description}
-      </p>
-
-      {card.action && (
-        <Link
-          href={card.action.href}
-          className="mt-auto inline-flex w-fit items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-2 text-sm font-semibold text-foreground transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
-          {card.action.label}
-          <ArrowRight aria-hidden="true" className="size-4" />
-        </Link>
-      )}
-    </article>
   )
 }

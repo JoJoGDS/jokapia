@@ -39,6 +39,7 @@ export function MethodologySection() {
       eyebrow="Un accompagnement de bout en bout"
       heading="Notre méthodologie"
       introduction="Une démarche claire et collaborative, de la première idée au suivi de votre solution."
+      variant="methodology"
       cards={steps.map(({ number, title, description, icon }) => ({
         label: `Étape ${number}`,
         title,

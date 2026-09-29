@@ -2,14 +2,14 @@ import { ProgressiveCardSection } from "@/components/sections/progressive-card-s
 
 const services = [
   {
-    category: "DEVIS ÉLECTRIQUE",
+    category: "ÉTUDES ÉLECTRIQUES",
     title: "Études électriques",
     description:
       "Nous concevons des installations électriques fiables, adaptées aux exigences de votre bâtiment. Vous recevez un devis détaillé et des recommandations claires pour maîtriser votre budget.",
     icon: "zap",
   },
   {
-    category: "SOLUTIONS SUR-MESURE",
+    category: "SOLUTIONS SUR MESURE",
     title: "Développement web",
     description:
       "Nous transformons vos besoins métier en applications et plateformes pensées pour vos équipes. De la conception au déploiement, vous obtenez un outil évolutif qui simplifie vos opérations.",
@@ -39,6 +39,7 @@ export function ServicesSection() {
       eyebrow="Jokapia · Nos expertises"
       heading="Nos expertises clés"
       introduction="Des solutions concrètes pour concevoir, connecter et équiper votre activité."
+      variant="expertise"
       cards={services.map(({ category, title, description, icon }) => ({
         label: category,
         title,
