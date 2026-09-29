@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type FormEvent, type ReactNode } from "react"
+import { useEffect, useState, type FormEvent, type ReactNode } from "react"
 import {
   Building2,
   CheckCircle2,
@@ -32,25 +32,21 @@ function ContactField({
   placeholder,
   icon: Icon,
   type = "text",
-  isRequired = false,
 }: {
   label: string
   name: string
   placeholder: string
   icon: typeof UserRound
   type?: string
-  isRequired?: boolean
 }) {
   return (
     <TextField
       name={name}
       type={type}
-      isRequired={isRequired}
       className="flex flex-col gap-1.5"
     >
       <Label className="text-sm font-medium text-foreground">
         {label}
-        {isRequired ? " *" : ""}
       </Label>
       <div className="relative">
         <Icon
@@ -76,7 +72,15 @@ function ContactField({
 }
 
 export function ContactDialog({ children }: { children: ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+
+  useEffect(() => {
+    if (!submitted || !isOpen) return
+
+    const timeoutId = window.setTimeout(() => setIsOpen(false), 5000)
+    return () => window.clearTimeout(timeoutId)
+  }, [isOpen, submitted])
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -84,7 +88,13 @@ export function ContactDialog({ children }: { children: ReactNode }) {
   }
 
   return (
-    <DialogTrigger onOpenChange={(isOpen) => !isOpen && setSubmitted(false)}>
+    <DialogTrigger
+      isOpen={isOpen}
+      onOpenChange={(nextIsOpen) => {
+        setIsOpen(nextIsOpen)
+        if (!nextIsOpen) setSubmitted(false)
+      }}
+    >
       {children}
       <ModalOverlay className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/55 p-3 backdrop-blur-[3px] data-[entering]:opacity-0 data-[exiting]:opacity-0 sm:p-6">
         <Modal className="w-full max-w-xl outline-none data-[entering]:scale-[0.98] data-[entering]:opacity-0 data-[exiting]:scale-[0.98] data-[exiting]:opacity-0">
@@ -131,8 +141,14 @@ export function ContactDialog({ children }: { children: ReactNode }) {
                 {submitted ? (
                   <div
                     role="status"
-                    className="rounded-2xl border border-emerald-600/20 bg-emerald-600/5 px-5 py-8 text-center"
+                    className="validation-card-enter relative overflow-hidden rounded-2xl border border-emerald-600/20 bg-emerald-600/5 px-5 py-8 text-center"
                   >
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-x-0 top-0 h-1 bg-emerald-600/15"
+                    >
+                      <div className="validation-progress h-full origin-left bg-emerald-600" />
+                    </div>
                     <CheckCircle2
                       aria-hidden="true"
                       className="mx-auto mb-3 size-10 text-emerald-600"
@@ -160,14 +176,12 @@ export function ContactDialog({ children }: { children: ReactNode }) {
                         name="name"
                         placeholder="Votre nom complet"
                         icon={UserRound}
-                        isRequired
                       />
                       <ContactField
                         label="Nom de votre organisation"
                         name="organization"
                         placeholder="Nom de votre entreprise ou organisation"
                         icon={Building2}
-                        isRequired
                       />
                       <ContactField
                         label="Email"
@@ -175,7 +189,6 @@ export function ContactDialog({ children }: { children: ReactNode }) {
                         placeholder="votre@email.com"
                         icon={Mail}
                         type="email"
-                        isRequired
                       />
                       <ContactField
                         label="Numéro de téléphone"
@@ -188,11 +201,10 @@ export function ContactDialog({ children }: { children: ReactNode }) {
 
                     <TextField
                       name="message"
-                      isRequired
                       className="flex flex-col gap-1.5"
                     >
                       <Label className="text-sm font-medium text-foreground">
-                        Décrivez votre besoin *
+                        Décrivez votre besoin
                       </Label>
                       <div className="relative">
                         <MessageCircle
