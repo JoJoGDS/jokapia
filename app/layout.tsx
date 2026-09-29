@@ -22,7 +22,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("font-sans antialiased", inter.variable, jetbrainsMono.variable)}
+      className={cn("scroll-smooth font-sans antialiased", inter.variable, jetbrainsMono.variable)}
     >
       <body>
         <ThemeProvider>{children}</ThemeProvider>
